@@ -2,7 +2,7 @@
 
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { extname, join } from 'node:path'
 import { log } from '@stefanprobst/log'
 import esbuild from 'esbuild'
 import glob from 'fast-glob'
@@ -37,7 +37,10 @@ function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
         const file = args.path.replace(prefix, '')
 
         for (const dir of dirs[index]) {
-          const [matchedFile] = glob.sync(`${dir.replace('*', file)}.*`)
+          const exp = dir.replace('*', file)
+          const [matchedFile] = glob.sync(
+            ['.mjs', '.cjs', '.js'].includes(extname(file)) ? exp : [exp + '.*', exp + '/index.*'],
+          )
           if (matchedFile) {
             return { path: matchedFile }
           }
