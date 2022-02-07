@@ -39,7 +39,8 @@ function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
         for (const dir of dirs[index]) {
           const exp = dir.replace('*', file)
           const [matchedFile] = glob.sync(
-            ['.mjs', '.cjs', '.js'].includes(extname(file)) ? exp : [exp + '.*', exp + '/index.*'],
+            [exp, exp + '.*', exp + '/index.*'],
+            { onlyFiles: true, suppressErrors: true }
           )
           if (matchedFile) {
             return { path: matchedFile }
