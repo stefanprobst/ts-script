@@ -2,7 +2,7 @@
 
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { extname, join } from 'node:path'
+import { join } from 'node:path'
 import { log } from '@stefanprobst/log'
 import esbuild from 'esbuild'
 import glob from 'fast-glob'
@@ -12,7 +12,7 @@ import mri from 'mri'
 /**
  * @see https://github.com/frankleng/esbuild-ts-paths
  */
-function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
+export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
   const { compilerOptions } = json5.parse(
     readFileSync(join(process.cwd(), tsconfigPath), { encoding: 'utf-8' }),
   )
