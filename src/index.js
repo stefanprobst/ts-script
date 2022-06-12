@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/** @typedef {import('esbuild').Plugin} EsbuildPlugin */
+
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -12,6 +14,8 @@ import mri from 'mri'
 /**
  * @see https://github.com/frankleng/esbuild-ts-paths
  */
+
+/** @type {(tsconfigPath?: string) => EsbuildPlugin} */
 export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
   const { compilerOptions } = json5.parse(
     readFileSync(join(process.cwd(), tsconfigPath), { encoding: 'utf-8' }),
@@ -25,7 +29,7 @@ export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
     dirs.map((dir) => join(process.cwd(), compilerOptions.baseUrl, dir)),
   )
 
-  /** @type {import('esbuild').Plugin} */
+  /** @type {EsbuildPlugin} */
   const plugin = {
     name: 'esbuild-tsconfig-paths',
     setup(build) {
