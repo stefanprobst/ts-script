@@ -1,11 +1,14 @@
 {
   "name": "@stefanprobst/ts-script",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "./src/index.js",
   "type": "module",
+  "exports": {
+    "import": "./src/index.js"
+  },
   "license": "MIT",
   "bin": {
-    "run-ts-script": "./src/index.js"
+    "run-ts-script": "./src/cli.js"
   },
   "files": [
     "src"

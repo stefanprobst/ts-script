@@ -1,19 +1,13 @@
-#!/usr/bin/env node
-
-/** @typedef {import('esbuild').Plugin} EsbuildPlugin */
-
-import { spawn } from 'node:child_process'
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { log } from '@stefanprobst/log'
-import esbuild from 'esbuild'
-import glob from 'fast-glob'
-import json5 from 'json5'
-import mri from 'mri'
-
 /**
  * @see https://github.com/frankleng/esbuild-ts-paths
  */
+
+/** @typedef {import('esbuild').Plugin} EsbuildPlugin */
+
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import glob from 'fast-glob'
+import json5 from 'json5'
 
 /** @type {(tsconfigPath?: string) => EsbuildPlugin} */
 export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
@@ -58,29 +52,3 @@ export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
 
   return plugin
 }
-
-async function run() {
-  const { _, tsconfig } = mri(process.argv.slice(2))
-  const [entrypoint] = _
-
-  if (entrypoint == null) {
-    log.error('No input file path provided.')
-    process.exit(0)
-  }
-
-  const result = await esbuild.build({
-    bundle: true,
-    format: 'esm',
-    platform: 'node',
-    entryPoints: [entrypoint],
-    external: ['./node_modules/*'],
-    plugins: [createTsConfigPathsPlugin(tsconfig)],
-    write: false,
-  })
-
-  const [out] = result.outputFiles
-  const argv = ['--input-type=module', '-e', out.text]
-  spawn('node', argv, { stdio: 'inherit' }).on('exit', process.exit)
-}
-
-run()
