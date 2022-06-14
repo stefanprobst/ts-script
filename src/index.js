@@ -5,14 +5,14 @@
 /** @typedef {import('esbuild').Plugin} EsbuildPlugin */
 
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import path from 'node:path'
 import glob from 'fast-glob'
 import json5 from 'json5'
 
 /** @type {(tsconfigPath?: string) => EsbuildPlugin} */
 export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
   const { compilerOptions } = json5.parse(
-    readFileSync(join(process.cwd(), tsconfigPath), { encoding: 'utf-8' }),
+    readFileSync(path.join(process.cwd(), tsconfigPath), { encoding: 'utf-8' }),
   )
 
   const keys = Object.keys(compilerOptions.paths)
@@ -20,7 +20,7 @@ export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
   const regexes = expressions.map((exp) => new RegExp(`^${exp}`))
   const filter = new RegExp(`^(${expressions.join('|')})`)
   const dirs = Object.values(compilerOptions.paths).map((dirs) =>
-    dirs.map((dir) => join(process.cwd(), compilerOptions.baseUrl, dir)),
+    dirs.map((dir) => path.posix.join(compilerOptions.baseUrl, dir)),
   )
 
   /** @type {EsbuildPlugin} */
@@ -41,7 +41,7 @@ export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
             { onlyFiles: true, suppressErrors: true }
           )
           if (matchedFile) {
-            return { path: matchedFile }
+            return { path: path.join(process.cwd(), path.normalize(matchedFile)) }
           }
         }
 
