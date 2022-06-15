@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process'
 import { log } from '@stefanprobst/log'
 import esbuild from 'esbuild'
 import mri from 'mri'
-import { createTsConfigPathsPlugin } from './index'
+import { createTsConfigPathsPlugin } from './index.js'
 
 async function run() {
   const { _, tsconfig } = mri(process.argv.slice(2))
