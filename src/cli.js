@@ -7,7 +7,7 @@ import mri from 'mri'
 import { createTsConfigPathsPlugin } from './index.js'
 
 async function run() {
-  const { _, tsconfig } = mri(process.argv.slice(2))
+  const { _, tsconfig, extensions, external } = mri(process.argv.slice(2))
   const [entrypoint] = _
 
   if (entrypoint == null) {
@@ -20,8 +20,8 @@ async function run() {
     format: 'esm',
     platform: 'node',
     entryPoints: [entrypoint],
-    external: ['./node_modules/*'],
-    plugins: [createTsConfigPathsPlugin(tsconfig)],
+    external: ['./node_modules/*', external],
+    plugins: [createTsConfigPathsPlugin(tsconfig, extensions)],
     write: false,
   })
 

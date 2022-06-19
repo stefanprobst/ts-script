@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/ts-script",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "main": "./src/index.js",
   "type": "module",
   "exports": {
@@ -14,32 +14,31 @@
     "src"
   ],
   "scripts": {
-    "format": "prettier . --list-different --ignore-path .gitignore",
+    "format": "prettier . --cache --check --ignore-path .gitignore",
     "format:fix": "yarn run format --write",
     "prepare": "simple-git-hooks || true"
   },
   "dependencies": {
-    "@stefanprobst/log": "^1.0.1",
-    "esbuild": "^0.14.14",
+    "@stefanprobst/log": "^1.0.3",
+    "esbuild": "^0.14.46",
     "fast-glob": "^3.2.11",
-    "json5": "^2.2.0",
+    "json5": "^2.2.1",
     "mri": "^1.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.1.0",
+    "@commitlint/cli": "^17.0.2",
     "@stefanprobst/commitlint-config": "^1.0.2",
-    "@stefanprobst/prettier-config": "^2.0.1",
-    "lint-staged": "^12.3.2",
-    "prettier": "^2.5.1",
-    "simple-git-hooks": "^2.7.0"
+    "@stefanprobst/prettier-config": "^2.0.2",
+    "lint-staged": "^13.0.2",
+    "prettier": "^2.7.1",
+    "simple-git-hooks": "^2.8.0"
   },
   "commitlint": {
     "extends": "@stefanprobst/commitlint-config"
   },
   "lint-staged": {
-    "*.ts": [
-      "prettier --write"
-    ]
+    "*.@(js|ts)": "prettier --cache --write",
+    "*.@(json|md)": "prettier --cache --write"
   },
   "prettier": "@stefanprobst/prettier-config",
   "simple-git-hooks": {

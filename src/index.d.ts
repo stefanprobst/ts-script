@@ -1,3 +1,3 @@
 import type { Plugin } from 'esbuild'
 
-export function createTsConfigPathsPlugin(tsconfigPath?: string): Plugin
+export function createTsConfigPathsPlugin(tsconfigPath?: string, extensions?: string): Plugin

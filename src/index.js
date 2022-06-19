@@ -10,7 +10,10 @@ import glob from 'fast-glob'
 import json5 from 'json5'
 
 /** @type {(tsconfigPath?: string) => EsbuildPlugin} */
-export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
+export function createTsConfigPathsPlugin(
+  tsconfigPath = './tsconfig.json',
+  extensions = '.{cjs,js,mjs,ts,tsx}',
+) {
   const { compilerOptions } = json5.parse(
     readFileSync(path.join(process.cwd(), tsconfigPath), { encoding: 'utf-8' }),
   )
@@ -36,10 +39,9 @@ export function createTsConfigPathsPlugin(tsconfigPath = './tsconfig.json') {
 
         for (const dir of dirs[index]) {
           const exp = dir.replace('*', file)
-          const [matchedFile] = glob.sync(
-            [exp, exp + '.*', exp + '/index.*'],
-            { onlyFiles: true, suppressErrors: true }
-          )
+          const [matchedFile] = glob.sync([exp, exp + extensions, exp + '/index' + extensions], {
+            onlyFiles: true,
+          })
           if (matchedFile) {
             return { path: path.join(process.cwd(), path.normalize(matchedFile)) }
           }
